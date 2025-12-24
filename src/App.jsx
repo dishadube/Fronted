@@ -14,7 +14,7 @@ import AllstudentDetails from './components/AllstudentDetails'
 import ForgetPassword from './components/ForgetPassword'
 import { ToastContainer } from 'react-toastify'
 import UserSettings from './components/UserSettings'
-
+import { UserProvider } from './Context/userContext'
 import Blogs from './components/Blogs'
 import ProfilePage from './components/ProfilePage'
 
