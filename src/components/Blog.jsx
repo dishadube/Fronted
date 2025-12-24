@@ -55,7 +55,7 @@ export default function Blog() {
 
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-     await axios.post("http://localhost:5000/api/blogs/create", form, {
+     await axios.post("https://vidya-vedas-backend.vercel.app/api/blogs/create", form, {
   headers: { Authorization: `Bearer ${token}` }
 });
       // on success, navigate to blog list or detail
