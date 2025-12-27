@@ -13,7 +13,7 @@ function AllstudentDetails() {
   const fetchStudents = async () => {
     try {
       const res = await fetch(
-        "https://vidya-vedas-backend.vercel.app/api/student/students"
+        "https://vidya-vedas-backend.vercel.app/api/student/get"
       );
 
       if (!res.ok) throw new Error("Failed to fetch students");
