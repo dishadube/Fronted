@@ -1,107 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AllstudentDetails() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await fetch('https://vidya-vedas-backend.vercel.app/api/student/get');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonData = await response.json();
-        setStudents(jsonData);
-
-        if (jsonData.length === 0) {
-          toast.info('No students found.');
-        } else {
-          toast.success(`${jsonData.length} student(s) loaded successfully!`);
-        }
-      } catch (err) {
-        setError(err);
-        toast.error(`Failed to load students: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchStudents();
   }, []);
 
-  if (loading) return <div className="p-6 text-center text-gray-700">Loading student data...</div>;
-  if (error) return <div className="p-6 text-center text-red-500">Error: {error.message}</div>;
+  const fetchStudents = async () => {
+    try {
+      const res = await fetch(
+        "https://vidya-vedas-backend.vercel.app/api/student/students"
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch students");
+
+      const data = await res.json();
+      setStudents(data);
+
+      data.length
+        ? toast.success(`${data.length} student(s) loaded successfully!`)
+        : toast.info("No students found.");
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <p className="p-6 text-center text-gray-700">
+        Loading student data...
+      </p>
+    );
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-800 text-center">All Students</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-center">
+        All Students
+      </h1>
 
       {students.length === 0 ? (
         <p className="text-center text-gray-600">No students found.</p>
       ) : (
         <>
-          {/* Table for medium and larger screens */}
+          {/* Desktop Table */}
           <div className="hidden md:block overflow-x-auto">
-            <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
+            <table className="min-w-full border divide-y">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Roll No</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Medium</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Course</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Mother's Name</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Gender</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Cast</th>
+                  {[
+                    "Roll No",
+                    "Name",
+                    "Medium",
+                    "Course",
+                    "Mother's Name",
+                    "Gender",
+                    "Cast",
+                  ].map((head) => (
+                    <th key={head} className="px-4 py-2 text-left text-sm">
+                      {head}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {students.map((student) => (
-                  <tr key={student._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.rollNo}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.studentName}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.medium}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.course}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.motherName}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.gender}</td>
-                    <td className="px-4 py-2 text-sm text-gray-700">{student.cast}</td>
+
+              <tbody>
+                {students.map((s) => (
+                  <tr key={s._id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2">{s.rollNo}</td>
+                    <td className="px-4 py-2">{s.studentName}</td>
+                    <td className="px-4 py-2">{s.medium}</td>
+                    <td className="px-4 py-2">{s.course}</td>
+                    <td className="px-4 py-2">{s.motherName}</td>
+                    <td className="px-4 py-2">{s.gender}</td>
+                    <td className="px-4 py-2">{s.cast}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/* Card layout for small screens */}
+          {/* Mobile Cards */}
           <div className="md:hidden space-y-4">
-            {students.map((student) => (
-              <div
-                key={student._id}
-                className="p-4 border border-gray-200 rounded shadow-sm bg-white"
-              >
-                <p><span className="font-semibold">Roll No:</span> {student.rollNo}</p>
-                <p><span className="font-semibold">Name:</span> {student.studentName}</p>
-                <p><span className="font-semibold">Medium:</span> {student.medium}</p>
-                <p><span className="font-semibold">Course:</span> {student.course}</p>
-                <p><span className="font-semibold">Mother's Name:</span> {student.motherName}</p>
-                <p><span className="font-semibold">Gender:</span> {student.gender}</p>
-                <p><span className="font-semibold">Cast:</span> {student.cast}</p>
+            {students.map((s) => (
+              <div key={s._id} className="p-4 border rounded bg-white">
+                {[
+                  ["Roll No", s.rollNo],
+                  ["Name", s.studentName],
+                  ["Medium", s.medium],
+                  ["Course", s.course],
+                  ["Mother's Name", s.motherName],
+                  ["Gender", s.gender],
+                  ["Cast", s.cast],
+                ].map(([label, value]) => (
+                  <p key={label}>
+                    <span className="font-semibold">{label}:</span> {value}
+                  </p>
+                ))}
               </div>
             ))}
           </div>
         </>
       )}
 
-      {/* Toast container */}
       <ToastContainer
         position="top-center"
         autoClose={2500}
-        hideProgressBar={false}
         newestOnTop
-        closeOnClick
-        pauseOnHover
         theme="colored"
       />
     </div>
