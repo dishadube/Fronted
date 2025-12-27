@@ -10,7 +10,7 @@ function AllstudentDetails() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch('https://vidya-vedas-backend.vercel.app/api/api/student/students');
+        const response = await fetch('https://vidya-vedas-backend.vercel.app/api/student/students');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
