@@ -47,7 +47,8 @@ export default function CreateBlog() {
           },
           body: JSON.stringify({
             title: form.title,
-            description: form.content, // ✅ backend expects "description"
+            content: form.content,
+})
           }),
         }
       );
